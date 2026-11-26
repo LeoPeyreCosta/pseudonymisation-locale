@@ -94,6 +94,10 @@ _DATE_LETTRES = re.compile(
 )
 
 # ---------------------------------------------------------------- adresses
+# Une adresse peut tenir sur deux lignes (voie, puis code postal et ville),
+# mais un nom de voie ou de ville ne déborde jamais sur la ligne suivante :
+# les espaces internes (_ESP) excluent le retour à la ligne.
+_ESP = r"[^\S\r\n]"
 _VOIES = (
     r"(?i:rue|avenue|av\.|boulevard|bd|chemin|impasse|all[ée]e|place|route|quai|cours|"
     r"square|r[ée]sidence|lotissement|lieu-dit|faubourg|passage|sentier|chauss[ée]e|"
@@ -101,15 +105,28 @@ _VOIES = (
 )
 _LIAISON = r"(?:de|du|des|la|le|les|l['’]|d['’]|et|sur|en|aux|au)"
 _MOT_PROPRE = r"[A-ZÀ-ÖØ-Þ][\w'’-]*"
-_NOM_VOIE = rf"(?:{_LIAISON}\s*)*{_MOT_PROPRE}(?:\s+(?:{_LIAISON}\s*)*{_MOT_PROPRE})*"
+_NOM_VOIE = (
+    rf"(?:{_LIAISON}{_ESP}*)*{_MOT_PROPRE}"
+    rf"(?:{_ESP}+(?:{_LIAISON}{_ESP}*)*{_MOT_PROPRE})*"
+)
 _ADRESSE_VOIE = re.compile(
-    rf"(?<!\w)\d{{1,4}}(?:\s?(?i:bis|ter|quater))?,?\s+{_VOIES}\s+{_NOM_VOIE}"
+    rf"(?<!\w)\d{{1,4}}(?:{_ESP}?(?i:bis|ter|quater))?,?{_ESP}+{_VOIES}{_ESP}+{_NOM_VOIE}"
 )
+_SEP_VILLE = rf"(?:{_ESP}|-)"
 _VILLE = (
-    r"[A-ZÀ-ÖØ-Þ][\w'’]*(?:[\s-](?:(?:sur|sous|en|lès|les|le|la|de|du|des|aux|au)[\s-]|"
-    r"d['’]|l['’])*[A-ZÀ-ÖØ-Þ][\w'’]*)*"
+    rf"[A-ZÀ-ÖØ-Þ][\w'’]*(?:{_SEP_VILLE}(?:(?:sur|sous|en|lès|les|le|la|de|du|des|aux|au)"
+    rf"{_SEP_VILLE}|d['’]|l['’])*[A-ZÀ-ÖØ-Þ][\w'’]*)*"
 )
-_CODE_POSTAL_VILLE = re.compile(rf"(?<!\w)\d{{5}}\s+{_VILLE}")
+# Code postal : cinq chiffres isolés, pas la fin d'un matricule (« RH-58213 »).
+_CODE_POSTAL_VILLE = re.compile(rf"(?<![\w-])\d{{5}}{_ESP}+{_VILLE}")
+# Compléments d'adresse : résidence, immeuble, bâtiment, escalier, appartement.
+_COMPLEMENT = re.compile(
+    rf"(?<!\w)(?:"
+    rf"(?i:b[âa]timent|b[âa]t\.|escalier|esc\.|appartement|appt\.?){_ESP}*(?:n°{_ESP}*)?"
+    rf"[A-Z0-9]{{1,4}}(?!\w)"
+    rf"|(?i:r[ée]sidence|immeuble|hameau){_ESP}+{_NOM_VOIE}"
+    rf")"
+)
 _ENTRE_ADRESSES = re.compile(r"[\s,]{0,3}")
 
 # ------------------------------------------------------------ identifiants
@@ -118,6 +135,8 @@ _IDENTIFIANT = re.compile(
     r"|(?:n°|num[ée]ro)\s*(?:de\s+|d['’])?(?:dossier|patient|allocataire|adh[ée]rent|client"
     r"|contrat|s[ée]jour|agent|candidat)"
     r"|(?:dossier|allocataire|s[ée]jour)\s+n°))"
+    # Organisme éventuel entre le libellé et la valeur : « N° allocataire CAF : ».
+    r"(?:\s+(?:CAF|MSA|CPAM|URSSAF))?"
     r"\s*[:.]?\s*(?P<valeur>[A-Z0-9][A-Z0-9/-]{3,})"
 )
 
@@ -136,11 +155,13 @@ def _detecter_identifiants(texte: str) -> Iterator[Entite]:
 
 
 def _detecter_adresses(texte: str) -> list[Entite]:
-    """Repère voies et « code postal + ville », puis fusionne les morceaux
-    contigus (« 12 rue des Lilas, 34170 Castelnau-le-Lez ») en une adresse."""
+    """Repère voies, compléments et « code postal + ville », puis fusionne les
+    morceaux contigus (« bâtiment C, 12 rue des Lilas, 34170 Castelnau-le-Lez »)
+    en une seule adresse."""
     morceaux = sorted(
-        [m.span() for m in _ADRESSE_VOIE.finditer(texte)]
-        + [m.span() for m in _CODE_POSTAL_VILLE.finditer(texte)]
+        m.span()
+        for motif in (_ADRESSE_VOIE, _COMPLEMENT, _CODE_POSTAL_VILLE)
+        for m in motif.finditer(texte)
     )
     fusionnes: list[list[int]] = []
     for debut, fin in morceaux:

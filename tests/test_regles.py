@@ -67,6 +67,25 @@ def test_adresse_voie_et_ville_fusionnees():
     assert adresses == ["12 rue des Tisserands, 34170 Castelnau-le-Lez"]
 
 
+def test_adresse_sur_deux_lignes_sans_deborder_sur_la_suivante():
+    texte = "Adresse : 7 impasse des Micocouliers\n30100 Alès\nPersonne de confiance : Mme X"
+    adresses = [e.texte for e in detecter_par_regles(texte) if e.type == "ADRESSE"]
+    assert adresses == ["7 impasse des Micocouliers\n30100 Alès"]
+
+
+def test_adresse_avec_residence_et_batiment():
+    texte = "Adresse : Résidence Les Iris, bâtiment B, appartement 12, 3 rue Haute, 30000 Nîmes\n"
+    adresses = [e.texte for e in detecter_par_regles(texte) if e.type == "ADRESSE"]
+    assert adresses == ["Résidence Les Iris, bâtiment B, appartement 12, 3 rue Haute, 30000 Nîmes"]
+
+
+def test_matricule_n_est_pas_un_code_postal():
+    texte = "Matricule : RH-58213\nIBAN : FR93 9999 9000 1200 0457 1836 042"
+    entites = detecter_par_regles(texte)
+    assert not any(e.type == "ADRESSE" for e in entites)
+    assert ("IDENTIFIANT", "RH-58213") in {(e.type, e.texte) for e in entites}
+
+
 def test_adresse_avec_complement_et_nom_compose():
     texte = "Au 3 bis avenue du Général de Gaulle à Lunel."
     adresses = [e.texte for e in detecter_par_regles(texte) if e.type == "ADRESSE"]
@@ -77,3 +96,8 @@ def test_adresse_avec_complement_et_nom_compose():
 def test_identifiant_seule_la_valeur_est_masquee():
     entites = [e for e in detecter_par_regles("IPP : 20481739 ; RPPS 10101234567") if e.type == "IDENTIFIANT"]
     assert [e.texte for e in entites] == ["20481739", "10101234567"]
+
+
+def test_identifiant_avec_organisme():
+    entites = detecter_par_regles("N° allocataire CAF : 4417820")
+    assert [(e.type, e.texte) for e in entites] == [("IDENTIFIANT", "4417820")]
