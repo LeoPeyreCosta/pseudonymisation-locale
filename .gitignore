@@ -14,3 +14,7 @@ sorties/
 # Vos documents réels : ne jamais les versionner
 documents/
 .venv/
+
+# Mesure de couverture
+.coverage
+htmlcov/
