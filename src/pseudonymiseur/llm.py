@@ -16,6 +16,7 @@ import logging
 import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field
+from itertools import permutations
 from typing import Protocol
 
 import requests
@@ -165,6 +166,22 @@ def _occurrences_nom(texte: str, nom: str) -> Iterator[tuple[int, int]]:
             yield m.span()
 
 
+def occurrences_reordonnees(texte: str, mention: str) -> list[tuple[int, int]]:
+    """Positions d'une personne écrite dans un autre ordre ou une autre casse
+    que celle proposée par le modèle : il rend souvent « Rémi Tessier » pour
+    « TESSIER Rémi ». Seuls des mots réellement présents sont retenus."""
+    jetons = jetons_nom(mention)
+    if not 2 <= len(jetons) <= 3:
+        return []
+    positions: set[tuple[int, int]] = set()
+    for ordre in permutations(jetons):
+        motif = r"\s+".join(re.escape(jeton) for jeton in ordre)
+        positions |= {
+            m.span() for m in re.finditer(rf"(?<!\w){motif}(?!\w)", texte, re.IGNORECASE)
+        }
+    return sorted(positions)
+
+
 def relier_personnes(mentions: list[str]) -> dict[str, str]:
     """Associe chaque mention à l'identité la plus complète qui la contient :
     « Mme Ferrand » → « Josiane Ferrand ». En cas d'homonymie (deux Ferrand),
@@ -218,6 +235,8 @@ def detecter_par_llm(texte: str, client: ClientLLM, taille_bloc: int = 1500) -> 
     presentes: dict[str, tuple[str, list[tuple[int, int]]]] = {}
     for mention, type_ in mentions.items():
         positions = list(occurrences(texte, mention))
+        if not positions and type_ == "PERSONNE":
+            positions = occurrences_reordonnees(texte, mention)
         if positions and plausible(mention, type_):
             presentes[mention] = (type_, positions)
         else:

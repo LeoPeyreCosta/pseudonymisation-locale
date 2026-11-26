@@ -86,3 +86,18 @@ def test_personne_en_minuscules_gardee(client_factice):
     texte = "bonjour, je suis marie dupont et j'attends une réponse."
     client = client_factice([{"texte": "marie dupont", "type": "PERSONNE"}])
     assert [e.texte for e in detecter_par_llm(texte, client).entites] == ["marie dupont"]
+
+
+def test_personne_reordonnee_retrouvee(client_factice):
+    texte = "M. TESSIER Rémi\n14 boulevard Gambetta\n\nVotre fille, Inès Tessier."
+    client = client_factice([{"texte": "Rémi Tessier", "type": "PERSONNE"}], toujours=True)
+    resultat = detecter_par_llm(texte, client)
+    assert "TESSIER Rémi" in [e.texte for e in resultat.entites]
+    assert resultat.rejetees == []
+
+
+def test_personne_reordonnee_exige_tous_les_mots(client_factice):
+    client = client_factice([{"texte": "Rémi Tessier", "type": "PERSONNE"}], toujours=True)
+    resultat = detecter_par_llm("M. Rémi Durand.", client)
+    assert resultat.entites == []
+    assert resultat.rejetees == ["Rémi Tessier"]
