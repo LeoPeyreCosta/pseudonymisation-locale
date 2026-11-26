@@ -153,10 +153,12 @@ Les mesures portent sur des documents fictifs annotés à la main (voir
   personnelles (une civilité masquée avec le nom est tolérée). Un masquage
   inutile gêne la lecture mais ne fait courir aucun risque.
 
-Deux corpus : `developpement/` (6 documents, 95 occurrences) a servi à
+Trois corpus : `developpement/` (6 documents, 95 occurrences) a servi à
 mettre au point les règles et les garde-fous ; ses chiffres sont donc
 optimistes. `controle/` (4 documents, 60 occurrences) a été écrit et versé
-après le gel du code (commit `7609643`), puis mesuré.
+après le gel du code (commit `7609643`), puis mesuré ; des corrections en
+ont été tirées. `controle-2/` (4 documents, 54 occurrences), écrit après
+ces corrections, en donne une mesure indépendante.
 
 ### Code actuel
 
@@ -187,8 +189,33 @@ minuscules dans un formulaire (« Nom : martineau »), date sans année,
 nom réordonné par le modèle. Elles ont été corrigées par des règles
 générales, testées à part. La seconde ligne n'est donc plus une mesure
 indépendante : elle montre l'effet des corrections, pas la performance
-attendue sur un document nouveau, qui se situe plus probablement entre les
-deux.
+attendue sur un document nouveau.
+
+### Second contrôle : une mesure indépendante du code corrigé
+
+Pour savoir ce que valent ces corrections sur des documents jamais vus, un
+second corpus de contrôle a été écrit ensuite, avec des genres absents des
+deux autres (courriel d'un parent, visite d'un service de soins à domicile,
+signalement d'un bailleur social, attestation d'employeur), versé avant
+d'être mesuré (commit `71abb08`), puis mesuré une seule fois, modèle
+rechargé :
+
+| Configuration | Rappel (54 occurrences) | Précision |
+|---|---|---|
+| Règles seules | 50,0 % | 100 % |
+| Règles + mistral 7B | **96,3 %** (52/54) | 96,3 % |
+
+Le chiffre d'après correction du premier contrôle (93,3 à 96,7 %) se
+confirme sur ces documents nouveaux. Deux fuites :
+
+- **« Hugo »**, prénom d'un enfant cité devant celui de sa sœur (« Hugo et
+  Léna N'Diaye ») : le modèle n'a repéré que le second ;
+- **« SIG-2027-0142 »**, après « Fiche de signalement n° », un libellé que
+  les règles ne connaissaient pas. Elles reconnaissent depuis tout nom de
+  pièce suivi de « n° » (signalement, demande, réclamation, facture…) :
+  avec les règles seules, le second contrôle passe à 51,9 %, sans
+  changement sur les deux autres corpus. Le tableau ci-dessus est celui
+  d'avant cette correction.
 
 **Variabilité.** Même à température 0, les réponses du modèle varient
 légèrement d'un passage à l'autre : sur le contrôle, le premier passage
