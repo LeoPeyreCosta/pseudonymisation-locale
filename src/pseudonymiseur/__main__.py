@@ -46,7 +46,10 @@ def _commande_traiter(args: argparse.Namespace) -> None:
     resume = ", ".join(f"{n} {t}" for t, n in resultat.compteurs.most_common())
     print(f"{len(resultat.entites)} données masquées en {traitement.duree_s:.1f} s : {resume or 'aucune'}")
     if traitement.rejetees:
-        print(f"{len(traitement.rejetees)} proposition(s) du modèle écartée(s) (absentes du texte).")
+        print(
+            f"{len(traitement.rejetees)} proposition(s) du modèle écartée(s) "
+            "(absentes du texte ou invraisemblables)."
+        )
     if args.details:
         for e in resultat.entites:
             print(f"  {e.type:<12} {e.source:<5} {e.texte!r}")

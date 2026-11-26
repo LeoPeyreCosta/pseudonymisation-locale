@@ -20,7 +20,7 @@ from typing import Protocol
 
 import requests
 
-from .entites import TYPES_LLM, Entite
+from .entites import CIVILITES, TYPES_LLM, Entite
 
 journal = logging.getLogger(__name__)
 
@@ -55,11 +55,6 @@ Règles :
 Exemple — texte : « Mme Lucie Bernard est suivie à la Clinique des Pins, à Nîmes. »
 Réponse : {"entites": [{"texte": "Lucie Bernard", "type": "PERSONNE"},
 {"texte": "Clinique des Pins", "type": "ORGANISATION"}, {"texte": "Nîmes", "type": "LIEU"}]}"""
-
-_TITRES = {
-    "m", "mr", "mme", "mlle", "dr", "docteur", "pr", "professeur", "madame",
-    "monsieur", "mademoiselle", "me", "maître", "maitre",
-}
 
 
 class ClientLLM(Protocol):
@@ -157,7 +152,7 @@ def jetons_nom(mention: str) -> list[str]:
     return [
         jeton
         for jeton in re.findall(r"[A-ZÀ-ÖØ-Þ][\w'’-]*", mention)
-        if len(jeton) >= 3 and jeton.casefold().rstrip(".") not in _TITRES
+        if len(jeton) >= 3 and jeton.casefold().rstrip(".") not in CIVILITES
     ]
 
 
@@ -188,10 +183,26 @@ def relier_personnes(mentions: list[str]) -> dict[str, str]:
     return canon
 
 
+def plausible(mention: str, type_: str) -> bool:
+    """Écarte les propositions qui ne peuvent pas désigner une personne, un
+    lieu ou une organisation : une civilité seule (« Dr »), ou, pour un lieu ou
+    une organisation, des mots sans aucune majuscule (« si douleur »). Un
+    nombre d'au moins quatre chiffres est gardé : s'il a échappé aux règles,
+    mieux vaut le masquer."""
+    if re.search(r"\d{4}", mention):
+        return True
+    mots = re.findall(r"[^\W\d_]+", mention)
+    if type_ == "PERSONNE":
+        # Pas d'exigence de majuscule : un message d'usager peut écrire « marie dupont ».
+        return any(mot.casefold() not in CIVILITES for mot in mots)
+    return any(caractere.isupper() for caractere in mention)
+
+
 @dataclass
 class ResultatLLM:
     entites: list[Entite] = field(default_factory=list)
-    #: Mentions proposées par le modèle mais absentes du texte (hallucinations).
+    #: Mentions proposées par le modèle puis écartées : absentes du texte
+    #: (hallucinations) ou invraisemblables (voir :func:`plausible`).
     rejetees: list[str] = field(default_factory=list)
 
 
@@ -207,7 +218,7 @@ def detecter_par_llm(texte: str, client: ClientLLM, taille_bloc: int = 1500) -> 
     presentes: dict[str, tuple[str, list[tuple[int, int]]]] = {}
     for mention, type_ in mentions.items():
         positions = list(occurrences(texte, mention))
-        if positions:
+        if positions and plausible(mention, type_):
             presentes[mention] = (type_, positions)
         else:
             resultat.rejetees.append(mention)

@@ -67,3 +67,22 @@ def test_relier_personnes():
     canon = relier_personnes(["Mme Ferrand", "Josiane Ferrand", "Thierry Ferrand"])
     assert canon["Mme Ferrand"] == "Josiane Ferrand"
     assert canon["Thierry Ferrand"] == "Thierry Ferrand"
+
+
+def test_propositions_invraisemblables_ecartees(client_factice):
+    texte = "Dr Paul Vidalenc. Un comprimé si douleur. Dossier 4417820. Vu à Lunel. Le Dr signe."
+    client = client_factice([
+        {"texte": "Dr", "type": "PERSONNE"},
+        {"texte": "si douleur", "type": "LIEU"},
+        {"texte": "4417820", "type": "ORGANISATION"},  # gardé : peut-être un identifiant
+        {"texte": "Lunel", "type": "LIEU"},
+    ])
+    resultat = detecter_par_llm(texte, client)
+    assert {e.texte for e in resultat.entites} == {"4417820", "Lunel"}
+    assert sorted(resultat.rejetees) == ["Dr", "si douleur"]
+
+
+def test_personne_en_minuscules_gardee(client_factice):
+    texte = "bonjour, je suis marie dupont et j'attends une réponse."
+    client = client_factice([{"texte": "marie dupont", "type": "PERSONNE"}])
+    assert [e.texte for e in detecter_par_llm(texte, client).entites] == ["marie dupont"]

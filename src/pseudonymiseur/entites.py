@@ -21,6 +21,12 @@ TYPES: tuple[str, ...] = (
 #: Types confiés au modèle de langue (les autres sont détectés par des règles).
 TYPES_LLM: tuple[str, ...] = ("PERSONNE", "LIEU", "ORGANISATION")
 
+#: Civilités et titres : ils accompagnent un nom mais n'en font pas partie.
+CIVILITES: frozenset[str] = frozenset({
+    "m", "mr", "mme", "mlle", "dr", "docteur", "pr", "professeur", "madame",
+    "monsieur", "mademoiselle", "me", "maître", "maitre",
+})
+
 
 @dataclass(frozen=True)
 class Entite:
