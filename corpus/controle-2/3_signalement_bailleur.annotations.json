@@ -1,0 +1,18 @@
+[
+  {"texte": "Habitat Garrigues & Mer", "type": "ORGANISATION"},
+  {"texte": "Lunel", "type": "LIEU"},
+  {"texte": "SIG-2027-0142", "type": "IDENTIFIANT"},
+  {"texte": "Fatoumata Diallo", "type": "PERSONNE"},
+  {"texte": "Morel", "type": "PERSONNE"},
+  {"texte": "Résidence Le Grand Chêne, bâtiment D, appartement 41, 12 avenue Victor-Hugo, 34400 Lunel", "type": "ADRESSE"},
+  {"texte": "LOC-55817", "type": "IDENTIFIANT"},
+  {"texte": "+33 6 39 98 51 77", "type": "TELEPHONE"},
+  {"texte": "23 janvier 2027", "type": "DATE"},
+  {"texte": "Patrice Cros", "type": "PERSONNE"},
+  {"texte": "appartement 41", "type": "ADRESSE"},
+  {"texte": "Diallo", "type": "PERSONNE"},
+  {"texte": "Ibrahim", "type": "PERSONNE"},
+  {"texte": "FR47 9999 9000 3120 2504 1837 762", "type": "IBAN"},
+  {"texte": "6 février 2027", "type": "DATE"},
+  {"texte": "Julie Marchand", "type": "PERSONNE"}
+]

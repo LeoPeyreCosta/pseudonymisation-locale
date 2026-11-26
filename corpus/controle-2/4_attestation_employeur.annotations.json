@@ -1,0 +1,15 @@
+[
+  {"texte": "Bernard FOURNIER", "type": "PERSONNE"},
+  {"texte": "Transports Cévenols SARL", "type": "ORGANISATION"},
+  {"texte": "8 rue de l'Industrie, 30100 Alès", "type": "ADRESSE"},
+  {"texte": "Kevin DA SILVA", "type": "PERSONNE"},
+  {"texte": "17.09.1993", "type": "DATE"},
+  {"texte": "Nîmes", "type": "LIEU"},
+  {"texte": "22 chemin de la Croix Blanche, 30140 Anduze", "type": "ADRESSE"},
+  {"texte": "193093018904570", "type": "NIR"},
+  {"texte": "01/04/2021", "type": "DATE"},
+  {"texte": "TC-0457", "type": "IDENTIFIANT"},
+  {"texte": "Alès", "type": "LIEU"},
+  {"texte": "3 mars 2027", "type": "DATE"},
+  {"texte": "Bernard Fournier", "type": "PERSONNE"}
+]

@@ -1,9 +1,10 @@
 import json
+from pathlib import Path
 
 import pytest
 
 from pseudonymiseur.__main__ import main
-from pseudonymiseur.entites import Entite
+from pseudonymiseur.entites import TYPES, Entite
 from pseudonymiseur.evaluation import RapportEvaluation, evaluer_document, occurrences_reference
 from pseudonymiseur.pipeline import detecter, traiter
 
@@ -89,3 +90,17 @@ def test_ligne_de_commande_sans_llm(tmp_path):
 def test_modele_seul_sans_les_regles(client_factice):
     entites, _ = detecter(TEXTE, client_factice(MENTIONS), regles=False)
     assert {e.type for e in entites} == {"PERSONNE"}  # ni date, ni adresse, ni NIR, ni téléphone
+
+
+CORPUS = Path(__file__).resolve().parents[1] / "corpus"
+
+
+@pytest.mark.parametrize("dossier", sorted(p for p in CORPUS.iterdir() if p.is_dir()), ids=lambda p: p.name)
+def test_corpus_bien_forme(dossier):
+    """Chaque annotation se retrouve dans son document, avec un type connu."""
+    documents = sorted(dossier.glob("*.txt"))
+    assert documents
+    for document in documents:
+        annotations = json.loads(document.with_suffix(".annotations.json").read_text(encoding="utf-8"))
+        assert annotations and all(a["type"] in TYPES for a in annotations)
+        occurrences_reference(document.read_text(encoding="utf-8"), annotations)  # lève si introuvable

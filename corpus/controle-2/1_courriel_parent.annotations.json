@@ -1,0 +1,13 @@
+[
+  {"texte": "Aurélie N'Diaye", "type": "PERSONNE"},
+  {"texte": "aurelie.ndiaye@courriel.example", "type": "EMAIL"},
+  {"texte": "restauration-scolaire@montferrier.example", "type": "EMAIL"},
+  {"texte": "Hugo", "type": "PERSONNE"},
+  {"texte": "Léna N'Diaye", "type": "PERSONNE"},
+  {"texte": "école Les Platanes", "type": "ORGANISATION"},
+  {"texte": "Léna", "type": "PERSONNE"},
+  {"texte": "06 39 98 26 90", "type": "TELEPHONE"},
+  {"texte": "Moussa N'Diaye", "type": "PERSONNE"},
+  {"texte": "14 mars", "type": "DATE"},
+  {"texte": "Aurélie", "type": "PERSONNE"}
+]

@@ -1,0 +1,13 @@
+SSIAD du Pic Saint-Loup — Service de soins infirmiers à domicile
+Compte rendu de visite du 9 février 2027
+
+Patient : M. Lucien BARTHÉLÉMY, 88 ans
+Domicile : 3 impasse des Oliviers, hameau de Cazevieille, 34270 Saint-Mathieu-de-Tréviers
+NIR : 1 38 05 34 247 019 06
+Médecin traitant : Dr Inès Ferrer-Vidal, 04 65 71 30 12
+
+Visite réalisée par Corinne Lapeyre, infirmière, en présence de la fille du patient, Mme Nathalie Roux-Barthélémy.
+
+M. Barthélémy présente une plaie au talon gauche qui ne cicatrise pas. Sa fille signale qu'il est tombé dans la salle de bains le 2 février. Le Dr Ferrer-Vidal sera informé par courriel (i.ferrer-vidal@sante-pic.example).
+
+Prochaine visite : jeudi 12 février.

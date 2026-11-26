@@ -1,0 +1,16 @@
+[
+  {"texte": "SSIAD du Pic Saint-Loup", "type": "ORGANISATION"},
+  {"texte": "9 février 2027", "type": "DATE"},
+  {"texte": "Lucien BARTHÉLÉMY", "type": "PERSONNE"},
+  {"texte": "3 impasse des Oliviers, hameau de Cazevieille, 34270 Saint-Mathieu-de-Tréviers", "type": "ADRESSE"},
+  {"texte": "1 38 05 34 247 019 06", "type": "NIR"},
+  {"texte": "Inès Ferrer-Vidal", "type": "PERSONNE"},
+  {"texte": "04 65 71 30 12", "type": "TELEPHONE"},
+  {"texte": "Corinne Lapeyre", "type": "PERSONNE"},
+  {"texte": "Nathalie Roux-Barthélémy", "type": "PERSONNE"},
+  {"texte": "Barthélémy", "type": "PERSONNE"},
+  {"texte": "2 février", "type": "DATE"},
+  {"texte": "Ferrer-Vidal", "type": "PERSONNE"},
+  {"texte": "i.ferrer-vidal@sante-pic.example", "type": "EMAIL"},
+  {"texte": "12 février", "type": "DATE"}
+]

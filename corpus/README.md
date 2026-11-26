@@ -17,21 +17,26 @@ l'outil masque et ce qu'il laisse passer.
 
 Ne déposez jamais de document réel dans ce dossier.
 
-## Deux sous-corpus
+## Trois sous-corpus
 
 | Dossier | Documents | Occurrences annotées | Rôle |
 |---|---:|---:|---|
 | `developpement/` | 6 | 95 | mise au point des règles et du filtrage des propositions du modèle |
-| `controle/` | 4 | 60 | contrôle : écrit et annoté après le gel du code, évalué tel quel |
+| `controle/` | 4 | 60 | premier contrôle : écrit après le gel du code ; des corrections en ont été tirées |
+| `controle-2/` | 4 | 54 | second contrôle : écrit après ces corrections, évalué une seule fois |
 
 Les chiffres obtenus sur `developpement/` sont optimistes par construction :
-les erreurs qu'on y a vues ont été corrigées. Ceux de `controle/` donnent une
-meilleure idée du comportement sur un document nouveau. L'historique git
-montre que le corpus de contrôle a été versé après les derniers changements
-du code de détection.
+les erreurs qu'on y a vues ont été corrigées. Le premier contrôle a été versé
+avant toute mesure, puis a servi à corriger le code : ses chiffres d'après
+correction ne sont plus indépendants. Le second contrôle a été écrit pour
+cette raison, avec des genres de documents absents des deux autres (courriel
+d'un parent, visite d'un service de soins à domicile, signalement d'un
+bailleur social, attestation d'employeur) ; il a été versé avant d'être
+mesuré, et n'a servi à aucune correction. L'historique git montre l'ordre.
 
-Les deux corpus restent très petits : ils permettent de repérer des erreurs et
-de comparer des réglages, pas d'annoncer un taux de fiabilité général.
+Les corpus restent très petits et sont écrits par l'auteur de l'outil : ils
+permettent de repérer des erreurs et de comparer des réglages, pas
+d'annoncer un taux de fiabilité général.
 
 ## Format
 
