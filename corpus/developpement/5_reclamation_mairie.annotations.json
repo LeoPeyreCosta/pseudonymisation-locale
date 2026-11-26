@@ -1,0 +1,16 @@
+[
+  {"texte": "Mairie de Saint-Clair-du-Lez", "type": "ORGANISATION"},
+  {"texte": "05/11/2026", "type": "DATE"},
+  {"texte": "REC-2026-0871", "type": "IDENTIFIANT"},
+  {"texte": "Gérard Lacombe", "type": "PERSONNE"},
+  {"texte": "18 chemin de la Garrigue, 34830 Clapiers", "type": "ADRESSE"},
+  {"texte": "06 39 98 20 64", "type": "TELEPHONE"},
+  {"texte": "gerard.lacombe@courriel.example", "type": "EMAIL"},
+  {"texte": "Lacombe", "type": "PERSONNE"},
+  {"texte": "chemin de la Garrigue", "type": "ADRESSE"},
+  {"texte": "20 octobre 2026", "type": "DATE"},
+  {"texte": "Odile Garnier", "type": "PERSONNE"},
+  {"texte": "28 octobre 2026", "type": "DATE"},
+  {"texte": "Mathieu Signoret", "type": "PERSONNE"},
+  {"texte": "Saint-Clair-du-Lez", "type": "LIEU"}
+]

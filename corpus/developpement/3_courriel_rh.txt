@@ -1,0 +1,20 @@
+De : Claire Delmas <c.delmas@lumiere-energies.example>
+À : Service paie <paie@lumiere-energies.example>
+Date : 18/09/2026
+Objet : Changement de coordonnées bancaires — Antoine Roussel
+
+Bonjour,
+
+Antoine Roussel, technicien de maintenance sur le site de Fos-sur-Mer, m'a transmis ses nouvelles coordonnées bancaires. Merci de mettre à jour son dossier avant la paie d'octobre :
+
+Matricule : RH-58213
+IBAN : FR93 9999 9000 1200 0457 1836 042
+NIR : 1 90 06 13 055 236 92
+
+Il a aussi déménagé au 45 boulevard des Platanes, 13270 Fos-sur-Mer. Vous pouvez le joindre au 06 39 98 77 15 ou à antoine.roussel@courriel.example.
+
+M. Roussel souhaite que le changement soit effectif au 1er octobre 2026.
+
+Bien cordialement,
+Claire Delmas
+Ressources humaines, Lumière Énergies

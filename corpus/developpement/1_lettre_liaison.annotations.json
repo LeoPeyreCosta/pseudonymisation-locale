@@ -1,0 +1,18 @@
+[
+  {"texte": "Centre hospitalier des Trois Fontaines", "type": "ORGANISATION"},
+  {"texte": "Montpellier", "type": "LIEU"},
+  {"texte": "14 octobre 2026", "type": "DATE"},
+  {"texte": "Hélène Varenne", "type": "PERSONNE"},
+  {"texte": "04 65 71 58 21", "type": "TELEPHONE"},
+  {"texte": "h.varenne@ch-troisfontaines.example", "type": "EMAIL"},
+  {"texte": "Bruno Lesage", "type": "PERSONNE"},
+  {"texte": "12 rue des Tisserands, 34170 Castelnau-le-Lez", "type": "ADRESSE"},
+  {"texte": "Josiane Ferrand", "type": "PERSONNE"},
+  {"texte": "03/02/1951", "type": "DATE"},
+  {"texte": "20481739", "type": "IDENTIFIANT"},
+  {"texte": "2 51 02 34 172 045 40", "type": "NIR"},
+  {"texte": "9 octobre 2026", "type": "DATE"},
+  {"texte": "Ferrand", "type": "PERSONNE"},
+  {"texte": "Thierry Ferrand", "type": "PERSONNE"},
+  {"texte": "Josiane", "type": "PERSONNE"}
+]

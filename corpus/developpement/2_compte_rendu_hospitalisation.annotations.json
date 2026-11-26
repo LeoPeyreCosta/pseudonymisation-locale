@@ -1,0 +1,17 @@
+[
+  {"texte": "Clinique des Garrigues", "type": "ORGANISATION"},
+  {"texte": "Karim Benali", "type": "PERSONNE"},
+  {"texte": "21/11/1978", "type": "DATE"},
+  {"texte": "Alès", "type": "LIEU"},
+  {"texte": "S26-004417", "type": "IDENTIFIANT"},
+  {"texte": "1 78 11 30 189 112 91", "type": "NIR"},
+  {"texte": "7 impasse des Micocouliers, 30100 Alès", "type": "ADRESSE"},
+  {"texte": "Nadia Benali", "type": "PERSONNE"},
+  {"texte": "06 39 98 41 07", "type": "TELEPHONE"},
+  {"texte": "2 novembre 2026", "type": "DATE"},
+  {"texte": "6 novembre 2026", "type": "DATE"},
+  {"texte": "Sophie Arnaud", "type": "PERSONNE"},
+  {"texte": "Benali", "type": "PERSONNE"},
+  {"texte": "Marc Olivier", "type": "PERSONNE"},
+  {"texte": "Olivier", "type": "PERSONNE"}
+]

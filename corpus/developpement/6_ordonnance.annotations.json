@@ -1,0 +1,11 @@
+[
+  {"texte": "Paul Vidalenc", "type": "PERSONNE"},
+  {"texte": "10101234567", "type": "IDENTIFIANT"},
+  {"texte": "25 place de la Comédie, 34000 Montpellier", "type": "ADRESSE"},
+  {"texte": "04 65 71 90 33", "type": "TELEPHONE"},
+  {"texte": "Montpellier", "type": "LIEU"},
+  {"texte": "19 novembre 2026", "type": "DATE"},
+  {"texte": "Élise Fabre", "type": "PERSONNE"},
+  {"texte": "14 avril 1985", "type": "DATE"},
+  {"texte": "2 85 04 75 116 001 90", "type": "NIR"}
+]

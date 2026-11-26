@@ -1,0 +1,17 @@
+[
+  {"texte": "Claire Delmas", "type": "PERSONNE"},
+  {"texte": "c.delmas@lumiere-energies.example", "type": "EMAIL"},
+  {"texte": "paie@lumiere-energies.example", "type": "EMAIL"},
+  {"texte": "18/09/2026", "type": "DATE"},
+  {"texte": "Antoine Roussel", "type": "PERSONNE"},
+  {"texte": "Fos-sur-Mer", "type": "LIEU"},
+  {"texte": "RH-58213", "type": "IDENTIFIANT"},
+  {"texte": "FR93 9999 9000 1200 0457 1836 042", "type": "IBAN"},
+  {"texte": "1 90 06 13 055 236 92", "type": "NIR"},
+  {"texte": "45 boulevard des Platanes, 13270 Fos-sur-Mer", "type": "ADRESSE"},
+  {"texte": "06 39 98 77 15", "type": "TELEPHONE"},
+  {"texte": "antoine.roussel@courriel.example", "type": "EMAIL"},
+  {"texte": "Roussel", "type": "PERSONNE"},
+  {"texte": "1er octobre 2026", "type": "DATE"},
+  {"texte": "Lumière Énergies", "type": "ORGANISATION"}
+]

@@ -1,0 +1,16 @@
+[
+  {"texte": "Laura Pinel", "type": "PERSONNE"},
+  {"texte": "27/10/2026", "type": "DATE"},
+  {"texte": "Sandrine Moreau", "type": "PERSONNE"},
+  {"texte": "Lucas", "type": "PERSONNE"},
+  {"texte": "Emma", "type": "PERSONNE"},
+  {"texte": "Résidence Les Hirondelles, bâtiment C, 4 allée des Genêts, 34080 Montpellier", "type": "ADRESSE"},
+  {"texte": "4417820", "type": "IDENTIFIANT"},
+  {"texte": "04 65 71 12 90", "type": "TELEPHONE"},
+  {"texte": "Moreau", "type": "PERSONNE"},
+  {"texte": "Julien Moreau", "type": "PERSONNE"},
+  {"texte": "école Jules-Ferry", "type": "ORGANISATION"},
+  {"texte": "Entraide Hérault", "type": "ORGANISATION"},
+  {"texte": "12 novembre 2026", "type": "DATE"},
+  {"texte": "centre médico-social de la Mosson", "type": "ORGANISATION"}
+]
