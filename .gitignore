@@ -13,3 +13,4 @@ sorties/
 
 # Vos documents réels : ne jamais les versionner
 documents/
+.venv/
