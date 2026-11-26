@@ -57,7 +57,9 @@ def _commande_traiter(args: argparse.Namespace) -> None:
 
 
 def _commande_evaluer(args: argparse.Namespace) -> None:
-    rapport = evaluer_corpus(args.dossier, _client(args))
+    if args.sans_regles and args.sans_llm:
+        sys.exit("--sans-regles et --sans-llm ensemble : il ne resterait rien à mesurer.")
+    rapport = evaluer_corpus(args.dossier, _client(args), regles=not args.sans_regles)
     print(rapport.en_markdown())
     if rapport.fuites:
         print("\nDonnées non masquées :")
@@ -98,6 +100,9 @@ def main(argv: list[str] | None = None) -> None:
 
     p_evaluer = sous.add_parser("evaluer", parents=[commun], help="mesurer la qualité sur un corpus annoté")
     p_evaluer.add_argument("dossier", help="dossier de documents .txt et de leurs .annotations.json")
+    p_evaluer.add_argument(
+        "--sans-regles", action="store_true", help="modèle seul, pour mesurer l'apport des règles"
+    )
     p_evaluer.set_defaults(fonction=_commande_evaluer)
 
     args = parser.parse_args(argv)

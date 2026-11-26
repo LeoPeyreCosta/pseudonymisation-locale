@@ -21,11 +21,15 @@ class Traitement:
 
 
 def detecter(
-    texte: str, client: ClientLLM | None = None, types: tuple[str, ...] = TYPES
+    texte: str,
+    client: ClientLLM | None = None,
+    types: tuple[str, ...] = TYPES,
+    regles: bool = True,
 ) -> tuple[list[Entite], list[str]]:
     """Détecte les données personnelles. Sans client LLM, seules les règles
-    s'appliquent (noms de personnes non détectés)."""
-    entites = detecter_par_regles(texte)
+    s'appliquent (noms de personnes non détectés). ``regles=False`` laisse le
+    modèle seul : utile pour mesurer ce que les règles apportent."""
+    entites = detecter_par_regles(texte) if regles else []
     rejetees: list[str] = []
     if client is not None:
         resultat_llm = detecter_par_llm(texte, client)

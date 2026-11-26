@@ -153,7 +153,10 @@ def evaluer_document(
 
 
 def evaluer_corpus(
-    dossier: str | Path, client: ClientLLM | None = None, types: tuple[str, ...] = TYPES
+    dossier: str | Path,
+    client: ClientLLM | None = None,
+    types: tuple[str, ...] = TYPES,
+    regles: bool = True,
 ) -> RapportEvaluation:
     rapport = RapportEvaluation()
     depart = time.perf_counter()
@@ -163,7 +166,7 @@ def evaluer_corpus(
         )
         annotations = [a for a in annotations if a["type"] in types]
         texte = chemin.read_text(encoding="utf-8")
-        entites, _ = detecter(texte, client, types)
+        entites, _ = detecter(texte, client, types, regles)
         evaluer_document(chemin.name, texte, annotations, entites, rapport)
         rapport.documents += 1
     rapport.duree_s = time.perf_counter() - depart

@@ -5,7 +5,7 @@ import pytest
 from pseudonymiseur.__main__ import main
 from pseudonymiseur.entites import Entite
 from pseudonymiseur.evaluation import RapportEvaluation, evaluer_document, occurrences_reference
-from pseudonymiseur.pipeline import traiter
+from pseudonymiseur.pipeline import detecter, traiter
 
 TEXTE = (
     "Mme Josiane Ferrand, née le 03/02/1951, demeurant 12 rue des Tisserands, "
@@ -84,3 +84,8 @@ def test_ligne_de_commande_sans_llm(tmp_path):
     table = json.loads((tmp_path / "courrier.table.json").read_text(encoding="utf-8"))
     assert "[NIR_1]" in sortie
     assert table["[NIR_1]"] == ["2 51 02 34 172 045 40"]
+
+
+def test_modele_seul_sans_les_regles(client_factice):
+    entites, _ = detecter(TEXTE, client_factice(MENTIONS), regles=False)
+    assert {e.type for e in entites} == {"PERSONNE"}  # ni date, ni adresse, ni NIR, ni téléphone
