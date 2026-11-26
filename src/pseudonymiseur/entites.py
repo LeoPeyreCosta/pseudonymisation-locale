@@ -40,7 +40,7 @@ class Entite:
     fin: int
     type: str
     texte: str
-    source: str = "regle"  # « regle » ou « llm »
+    source: str = "regle"  # « regle », « llm » ou « propagation »
     cle: str = ""
 
     @property

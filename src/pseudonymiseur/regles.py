@@ -13,6 +13,10 @@ from collections.abc import Iterator
 
 from .entites import Entite
 
+#: Espace sans retour à la ligne : une donnée écrite sur une ligne (nom de
+#: voie, ville, date) ne doit pas mordre sur la ligne suivante.
+_ESP = r"[^\S\r\n]"
+
 # --------------------------------------------------------------------- NIR
 # Numéro de sécurité sociale : sexe, année, mois, département (2A/2B pour la
 # Corse), commune, rang, puis une clé de deux chiffres (souvent espacés).
@@ -88,16 +92,16 @@ _DATE_CHIFFRES = re.compile(
     r"(?<![\w/.-])(?:0?[1-9]|[12]\d|3[01])(?P<sep>[/.-])(?:0?[1-9]|1[0-2])(?P=sep)"
     r"(?:(?:19|20)\d{2}|\d{2})(?![\w/.-])"
 )
+# Avec ou sans année : « 9 octobre 2026 », « le 2 novembre ».
 _DATE_LETTRES = re.compile(
-    rf"(?<!\w)(?:1er|0?[1-9]|[12]\d|3[01])\s+(?:{_MOIS})\s+(?:19|20)\d{{2}}(?!\w)",
+    rf"(?<!\w)(?:1er|0?[1-9]|[12]\d|3[01]){_ESP}+(?:{_MOIS})"
+    rf"(?:{_ESP}+(?:19|20)\d{{2}})?(?!\w)",
     re.IGNORECASE,
 )
 
 # ---------------------------------------------------------------- adresses
 # Une adresse peut tenir sur deux lignes (voie, puis code postal et ville),
-# mais un nom de voie ou de ville ne déborde jamais sur la ligne suivante :
-# les espaces internes (_ESP) excluent le retour à la ligne.
-_ESP = r"[^\S\r\n]"
+# mais un nom de voie ou de ville ne déborde jamais sur la ligne suivante.
 _VOIES = (
     r"(?i:rue|avenue|av\.|boulevard|bd|chemin|impasse|all[ée]e|place|route|quai|cours|"
     r"square|r[ée]sidence|lotissement|lieu-dit|faubourg|passage|sentier|chauss[ée]e|"
@@ -118,11 +122,13 @@ _VILLE = (
     rf"{_SEP_VILLE}|d['’]|l['’])*[A-ZÀ-ÖØ-Þ][\w'’]*)*"
 )
 # Code postal : cinq chiffres isolés, pas la fin d'un matricule (« RH-58213 »).
-_CODE_POSTAL_VILLE = re.compile(rf"(?<![\w-])\d{{5}}{_ESP}+{_VILLE}")
-# Compléments d'adresse : résidence, immeuble, bâtiment, escalier, appartement.
+_CODE_POSTAL_VILLE = re.compile(rf"(?<![\w-])\d{{5}}{_ESP}+(?P<ville>{_VILLE})")
+# Compléments d'adresse : résidence, immeuble, bâtiment, escalier, appartement,
+# chambre (établissement d'hébergement).
 _COMPLEMENT = re.compile(
     rf"(?<!\w)(?:"
-    rf"(?i:b[âa]timent|b[âa]t\.|escalier|esc\.|appartement|appt\.?){_ESP}*(?:n°{_ESP}*)?"
+    rf"(?i:b[âa]timent|b[âa]t\.|escalier|esc\.|appartement|appt\.?|chambre)"
+    rf"{_ESP}*(?:n°{_ESP}*)?"
     rf"[A-Z0-9]{{1,4}}(?!\w)"
     rf"|(?i:r[ée]sidence|immeuble|hameau){_ESP}+{_NOM_VOIE}"
     rf")"
@@ -138,6 +144,16 @@ _IDENTIFIANT = re.compile(
     # Organisme éventuel entre le libellé et la valeur : « N° allocataire CAF : ».
     r"(?:\s+(?:CAF|MSA|CPAM|URSSAF))?"
     r"\s*[:.]?\s*(?P<valeur>[A-Z0-9][A-Z0-9/-]{3,})"
+)
+
+# ------------------------------------------------------- champs nominatifs
+# Formulaires : « Nom : martineau », « Prénom : kevin ». Le nom déclaré est
+# masqué partout où il réapparaît sous la même forme, même sans majuscule.
+_CHAMP_NOM = re.compile(
+    rf"(?im)^{_ESP}*(?:nom{_ESP}+et{_ESP}+pr[ée]noms?"
+    rf"|nom(?:{_ESP}+(?:de{_ESP}+naissance|de{_ESP}+famille|d['’]usage))?"
+    rf"|pr[ée]noms?){_ESP}*:{_ESP}*"
+    rf"(?P<valeur>[^\W\d_]+(?:[ '’-][^\W\d_]+){{0,3}}){_ESP}*$"
 )
 
 
@@ -175,6 +191,29 @@ def _detecter_adresses(texte: str) -> list[Entite]:
     return [Entite(d, f, "ADRESSE", texte[d:f]) for d, f in fusionnes]
 
 
+def _occurrences_exactes(texte: str, forme: str) -> Iterator[re.Match[str]]:
+    motif = r"\s+".join(re.escape(mot) for mot in forme.split())
+    return re.finditer(rf"(?<!\w){motif}(?!\w)", texte)
+
+
+def _detecter_villes(texte: str) -> Iterator[Entite]:
+    """Une ville qui figure dans une adresse (« 34500 Béziers ») est aussi
+    masquée quand elle est citée seule (« Béziers, le 23 octobre »).
+
+    Ces mentions sont marquées « propagation » : elles s'effacent devant une
+    détection plus longue du modèle (« CHU de Montpellier »), qu'elles
+    couperaient sinon en deux."""
+    for ville in {m.group("ville") for m in _CODE_POSTAL_VILLE.finditer(texte)}:
+        for m in _occurrences_exactes(texte, ville):
+            yield Entite(m.start(), m.end(), "LIEU", m.group(), "propagation")
+
+
+def _detecter_champs_nom(texte: str) -> Iterator[Entite]:
+    for nom in {m.group("valeur") for m in _CHAMP_NOM.finditer(texte)}:
+        for m in _occurrences_exactes(texte, nom):
+            yield Entite(m.start(), m.end(), "PERSONNE", m.group())
+
+
 _DETECTEURS = (
     _detecter_nir,
     _detecter_iban,
@@ -184,6 +223,8 @@ _DETECTEURS = (
     _simple(_DATE_LETTRES, "DATE"),
     _detecter_identifiants,
     _detecter_adresses,
+    _detecter_villes,
+    _detecter_champs_nom,
 )
 
 

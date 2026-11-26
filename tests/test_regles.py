@@ -101,3 +101,25 @@ def test_identifiant_seule_la_valeur_est_masquee():
 def test_identifiant_avec_organisme():
     entites = detecter_par_regles("N° allocataire CAF : 4417820")
     assert [(e.type, e.texte) for e in entites] == [("IDENTIFIANT", "4417820")]
+
+
+def test_date_sans_annee():
+    t = types_et_textes("Le portage de repas s'est arrêté le 2 novembre. Retour prévu le 1er mars 2027.")
+    assert {("DATE", "2 novembre"), ("DATE", "1er mars 2027")} <= t
+
+
+def test_chambre_d_etablissement():
+    t = types_et_textes("Résidente : Mme X, chambre 214.")
+    assert ("ADRESSE", "chambre 214") in t
+
+
+def test_ville_d_une_adresse_masquee_ailleurs():
+    texte = "8 avenue de la Liberté, 34500 Béziers\n\nBéziers, le 23 octobre 2026"
+    lieux = [(e.debut, e.source) for e in detecter_par_regles(texte) if e.type == "LIEU"]
+    assert (texte.index("Béziers, le"), "propagation") in lieux
+
+
+def test_champs_nom_et_prenom_d_un_formulaire():
+    texte = "Nom : martineau\nPrénom : kevin\nNom du médecin : Dr X\n\nmerci d'avance, kevin"
+    personnes = [e.texte for e in detecter_par_regles(texte) if e.type == "PERSONNE"]
+    assert sorted(personnes) == ["kevin", "kevin", "martineau"]

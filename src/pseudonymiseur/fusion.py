@@ -5,8 +5,10 @@ from __future__ import annotations
 from .entites import Entite
 
 #: Les règles sont prioritaires : elles sont vérifiables et ne se trompent pas
-#: de frontière (une adresse « rue Jean Moulin » reste une adresse).
-_PRIORITE = {"regle": 0, "llm": 1}
+#: de frontière (une adresse « rue Jean Moulin » reste une adresse). Une ville
+#: retrouvée par propagation passe après le modèle, pour ne pas couper en deux
+#: une organisation qu'il a repérée (« CHU de Montpellier »).
+_PRIORITE = {"regle": 0, "llm": 1, "propagation": 2}
 
 
 def resoudre_chevauchements(entites: list[Entite]) -> list[Entite]:

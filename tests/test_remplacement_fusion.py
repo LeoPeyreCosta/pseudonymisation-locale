@@ -49,3 +49,13 @@ def test_cle_relie_des_formes_differentes():
     ]
     resultat = remplacer(texte, entites)
     assert resultat.texte == "[PERSONNE_1] puis [PERSONNE_1]."
+
+
+def test_ville_propagee_s_efface_devant_une_organisation(client_factice):
+    from pseudonymiseur.pipeline import traiter
+
+    texte = "CHU de Montpellier\n191 avenue du Doyen Gaston Giraud, 34295 Montpellier\n\nMontpellier, le 3 mars 2026"
+    client = client_factice([{"texte": "CHU de Montpellier", "type": "ORGANISATION"}])
+    sortie = traiter(texte, client).resultat.texte
+    assert sortie.splitlines()[0] == "[ORGANISATION_1]"
+    assert sortie.endswith("[LIEU_1], le [DATE_1]")

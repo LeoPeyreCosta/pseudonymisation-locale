@@ -52,7 +52,7 @@ def _commande_traiter(args: argparse.Namespace) -> None:
         )
     if args.details:
         for e in resultat.entites:
-            print(f"  {e.type:<12} {e.source:<5} {e.texte!r}")
+            print(f"  {e.type:<12} {e.source:<11} {e.texte!r}")
     print("Relisez toujours le résultat : aucun outil automatique ne garantit 100 %.")
 
 
