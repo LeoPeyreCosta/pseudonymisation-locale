@@ -123,3 +123,9 @@ def test_champs_nom_et_prenom_d_un_formulaire():
     texte = "Nom : martineau\nPrénom : kevin\nNom du médecin : Dr X\n\nmerci d'avance, kevin"
     personnes = [e.texte for e in detecter_par_regles(texte) if e.type == "PERSONNE"]
     assert sorted(personnes) == ["kevin", "kevin", "martineau"]
+
+
+def test_numero_de_piece_quelconque():
+    t = types_et_textes("Fiche de signalement n° SIG-2027-0142 ; réclamation n° 88412 ; au n° 12 de la rue.")
+    assert {("IDENTIFIANT", "SIG-2027-0142"), ("IDENTIFIANT", "88412")} <= t
+    assert ("IDENTIFIANT", "12") not in t  # un numéro de rue n'est pas un identifiant

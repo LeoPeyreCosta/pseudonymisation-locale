@@ -140,7 +140,9 @@ _IDENTIFIANT = re.compile(
     r"(?i:\b(?:IPP|NIP|RPPS|ADELI|matricule"
     r"|(?:n°|num[ée]ro)\s*(?:de\s+|d['’])?(?:dossier|patient|allocataire|adh[ée]rent|client"
     r"|contrat|s[ée]jour|agent|candidat)"
-    r"|(?:dossier|allocataire|s[ée]jour)\s+n°))"
+    # « Fiche de signalement n° SIG-2027-0142 » : un nom de pièce suivi de « n° ».
+    r"|(?:dossier|allocataire|s[ée]jour|signalement|demande|r[ée]clamation|fiche|ticket"
+    r"|courrier|facture|r[ée]f[ée]rence)\s+n°))"
     # Organisme éventuel entre le libellé et la valeur : « N° allocataire CAF : ».
     r"(?:\s+(?:CAF|MSA|CPAM|URSSAF))?"
     r"\s*[:.]?\s*(?P<valeur>[A-Z0-9][A-Z0-9/-]{3,})"
