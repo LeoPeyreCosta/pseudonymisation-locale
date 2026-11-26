@@ -1,0 +1,14 @@
+[
+  {"texte": "CCAS de Pignan", "type": "ORGANISATION"},
+  {"texte": "12/11/2026", "type": "DATE"},
+  {"texte": "martineau", "type": "PERSONNE"},
+  {"texte": "kevin", "type": "PERSONNE"},
+  {"texte": "kevin.martineau34@courriel.example", "type": "EMAIL"},
+  {"texte": "0639984512", "type": "TELEPHONE"},
+  {"texte": "Martineau Odette", "type": "PERSONNE"},
+  {"texte": "3 rue du Moulin", "type": "ADRESSE"},
+  {"texte": "Pignan", "type": "LIEU"},
+  {"texte": "2 novembre", "type": "DATE"},
+  {"texte": "Ruiz", "type": "PERSONNE"},
+  {"texte": "04 65 71 33 08", "type": "TELEPHONE"}
+]

@@ -1,0 +1,18 @@
+[
+  {"texte": "Groupe scolaire Paul-Langevin", "type": "ORGANISATION"},
+  {"texte": "8 avenue de la Liberté, 34500 Béziers", "type": "ADRESSE"},
+  {"texte": "04 65 71 64 19", "type": "TELEPHONE"},
+  {"texte": "Béziers", "type": "LIEU"},
+  {"texte": "23 octobre 2026", "type": "DATE"},
+  {"texte": "Noah GIMENEZ", "type": "PERSONNE"},
+  {"texte": "09/04/2017", "type": "DATE"},
+  {"texte": "Jessica Gimenez", "type": "PERSONNE"},
+  {"texte": "Kévin Lopez", "type": "PERSONNE"},
+  {"texte": "27 rue Paul Riquet, appartement 5, 34500 Béziers", "type": "ADRESSE"},
+  {"texte": "Noah", "type": "PERSONNE"},
+  {"texte": "16 octobre 2026", "type": "DATE"},
+  {"texte": "Sarah Combes", "type": "PERSONNE"},
+  {"texte": "17 octobre 2026", "type": "DATE"},
+  {"texte": "Laetitia Roux", "type": "PERSONNE"},
+  {"texte": "Olivier Martel", "type": "PERSONNE"}
+]

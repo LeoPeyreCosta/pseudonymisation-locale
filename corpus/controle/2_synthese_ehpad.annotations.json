@@ -1,0 +1,18 @@
+[
+  {"texte": "EHPAD Les Oliviers", "type": "ORGANISATION"},
+  {"texte": "Saint-Gély-du-Fesc", "type": "LIEU"},
+  {"texte": "4 décembre 2026", "type": "DATE"},
+  {"texte": "Anne-Sophie Rigal", "type": "PERSONNE"},
+  {"texte": "Yannick Brunel", "type": "PERSONNE"},
+  {"texte": "Fatima Haddad", "type": "PERSONNE"},
+  {"texte": "Coralie Vidal", "type": "PERSONNE"},
+  {"texte": "Marguerite AUZIAS", "type": "PERSONNE"},
+  {"texte": "17.06.1938", "type": "DATE"},
+  {"texte": "chambre 214", "type": "ADRESSE"},
+  {"texte": "Auzias", "type": "PERSONNE"},
+  {"texte": "Christine Pujol", "type": "PERSONNE"},
+  {"texte": "06 39 98 70 26", "type": "TELEPHONE"},
+  {"texte": "Vidal", "type": "PERSONNE"},
+  {"texte": "Haddad", "type": "PERSONNE"},
+  {"texte": "18 décembre 2026", "type": "DATE"}
+]

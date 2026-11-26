@@ -1,0 +1,16 @@
+[
+  {"texte": "Mutuelle Garrigue Santé", "type": "ORGANISATION"},
+  {"texte": "Montpellier", "type": "LIEU"},
+  {"texte": "2 décembre 2026", "type": "DATE"},
+  {"texte": "TESSIER Rémi", "type": "PERSONNE"},
+  {"texte": "Appartement 3B 14 boulevard Gambetta 30000 Nîmes", "type": "ADRESSE"},
+  {"texte": "MGS-0098341", "type": "IDENTIFIANT"},
+  {"texte": "1 85 06 30 189 021 50", "type": "NIR"},
+  {"texte": "20 novembre 2026", "type": "DATE"},
+  {"texte": "Inès Tessier", "type": "PERSONNE"},
+  {"texte": "Mehdi Saadi", "type": "PERSONNE"},
+  {"texte": "FR85 9999 8000 1123 4567 8901 247", "type": "IBAN"},
+  {"texte": "Pauline Meunier", "type": "PERSONNE"},
+  {"texte": "+33 4 65 71 20 55", "type": "TELEPHONE"},
+  {"texte": "p.meunier@garrigue-sante.example", "type": "EMAIL"}
+]
