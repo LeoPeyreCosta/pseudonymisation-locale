@@ -8,19 +8,26 @@ Indicateurs :
 
 * **rappel** (le plus important en protection des données) : part des
   occurrences effectivement masquées ; ce qui n'est pas masqué *fuit* ;
-* **précision** : part des masquages qui portaient bien sur une donnée
-  personnelle (le reste est du sur-masquage, gênant mais sans risque).
+* **précision** : part des masquages *justes*, c'est-à-dire qui portent sur
+  une donnée personnelle sans déborder sur le texte voisin (une civilité
+  masquée avec le nom est tolérée). Le reste est du sur-masquage : gênant
+  pour la lecture, sans risque pour les personnes.
+
+Le rappel ne tient pas compte du type : une ville masquée comme
+``[ORGANISATION]`` ne fuit pas. Les tableaux par type indiquent le type
+annoté, pas le type prédit.
 """
 
 from __future__ import annotations
 
 import json
+import re
 import time
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .entites import TYPES, Entite
+from .entites import CIVILITES, TYPES, Entite
 from .llm import ClientLLM, occurrences
 from .pipeline import detecter
 
@@ -39,7 +46,10 @@ class RapportEvaluation:
     masquages: int = 0
     masquages_justes: int = 0
     fuites: list[Fuite] = field(default_factory=list)
+    #: Masquages sans aucune donnée personnelle : (document, texte, type).
     faux_positifs: list[tuple[str, str, str]] = field(default_factory=list)
+    #: Masquages qui débordent d'une donnée sur le texte voisin.
+    debordements: list[tuple[str, str, str]] = field(default_factory=list)
     documents: int = 0
     duree_s: float = 0.0
 
@@ -70,7 +80,9 @@ class RapportEvaluation:
         lignes += [
             "",
             f"Précision : {self.precision:.1%} "
-            f"({self.masquages_justes} masquages justes sur {self.masquages}).",
+            f"({self.masquages_justes} masquages justes sur {self.masquages} ; "
+            f"{len(self.faux_positifs)} sans donnée personnelle, "
+            f"{len(self.debordements)} qui débordent).",
             f"{self.documents} documents, {self.duree_s:.0f} s au total.",
         ]
         return "\n".join(lignes)
@@ -103,6 +115,16 @@ def _est_couverte(masque: list[bool], texte: str, debut: int, fin: int) -> bool:
     return all(masque[i] for i in range(debut, fin) if texte[i].isalnum())
 
 
+def _deborde(texte: str, reference_masque: list[bool], entite: Entite) -> bool:
+    """Vrai si le masquage couvre des mots hors de toute donnée annotée
+    (« 34000 Montpellier » suivi du « Tél » de la ligne d'après), civilités
+    exceptées (« Mme » dans « Mme Ferrand »)."""
+    hors = "".join(
+        " " if reference_masque[i] else texte[i] for i in range(entite.debut, entite.fin)
+    )
+    return any(mot.casefold() not in CIVILITES for mot in re.findall(r"\w+", hors))
+
+
 def evaluer_document(
     nom: str, texte: str, annotations: list[dict[str, str]], entites: list[Entite],
     rapport: RapportEvaluation,
@@ -117,12 +139,17 @@ def evaluer_document(
             rapport.masquees[type_] += 1
         else:
             rapport.fuites.append(Fuite(nom, valeur, type_))
+    reference_masque = [False] * len(texte)
+    for debut, fin, _, _ in reference:
+        reference_masque[debut:fin] = [True] * (fin - debut)
     for entite in entites:
         rapport.masquages += 1
-        if any(entite.debut < f and d < entite.fin for d, f, _, _ in reference):
-            rapport.masquages_justes += 1
-        else:
+        if not any(reference_masque[entite.debut : entite.fin]):
             rapport.faux_positifs.append((nom, entite.texte, entite.type))
+        elif _deborde(texte, reference_masque, entite):
+            rapport.debordements.append((nom, entite.texte, entite.type))
+        else:
+            rapport.masquages_justes += 1
 
 
 def evaluer_corpus(

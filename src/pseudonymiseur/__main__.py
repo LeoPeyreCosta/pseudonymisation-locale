@@ -64,8 +64,12 @@ def _commande_evaluer(args: argparse.Namespace) -> None:
         for fuite in rapport.fuites:
             print(f"  [{fuite.type}] {fuite.texte!r} ({fuite.document})")
     if args.details and rapport.faux_positifs:
-        print("\nSur-masquages :")
+        print("\nMasquages sans donnée personnelle :")
         for document, texte, type_ in rapport.faux_positifs:
+            print(f"  [{type_}] {texte!r} ({document})")
+    if args.details and rapport.debordements:
+        print("\nMasquages qui débordent :")
+        for document, texte, type_ in rapport.debordements:
             print(f"  [{type_}] {texte!r} ({document})")
 
 

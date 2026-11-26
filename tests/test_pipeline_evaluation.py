@@ -3,6 +3,7 @@ import json
 import pytest
 
 from pseudonymiseur.__main__ import main
+from pseudonymiseur.entites import Entite
 from pseudonymiseur.evaluation import RapportEvaluation, evaluer_document, occurrences_reference
 from pseudonymiseur.pipeline import traiter
 
@@ -54,6 +55,25 @@ def test_rappel_et_fuites(client_factice):
     assert rapport.masquees["DATE"] == 1
     assert rapport.masquees["PERSONNE"] == 0
     assert {f.texte for f in rapport.fuites} == {"Josiane Ferrand", "Ferrand"}
+
+
+def test_precision_compte_les_debordements():
+    texte = "Mme Josiane Ferrand\n34000 Montpellier\nTél. : 04 65 71 90 33"
+    annotations = [
+        {"texte": "Josiane Ferrand", "type": "PERSONNE"},
+        {"texte": "34000 Montpellier", "type": "ADRESSE"},
+    ]
+    entites = [
+        Entite(0, 19, "PERSONNE", "Mme Josiane Ferrand", "llm"),  # civilité tolérée
+        Entite(20, 41, "ADRESSE", "34000 Montpellier\nTél"),  # déborde
+        Entite(45, 59, "TELEPHONE", "04 65 71 90 33"),  # non annoté ici
+    ]
+    rapport = RapportEvaluation()
+    evaluer_document("test.txt", texte, annotations, entites, rapport)
+    assert rapport.masquages_justes == 1
+    assert [d[1] for d in rapport.debordements] == ["34000 Montpellier\nTél"]
+    assert [f[1] for f in rapport.faux_positifs] == ["04 65 71 90 33"]
+    assert rapport.rappel == 1.0
 
 
 def test_ligne_de_commande_sans_llm(tmp_path):
