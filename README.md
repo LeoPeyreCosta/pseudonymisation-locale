@@ -163,7 +163,16 @@ après le gel du code (commit `7609643`), puis mesuré.
 | Configuration | Développement (95) | Contrôle (60) |
 |---|---|---|
 | Règles seules (`--sans-llm`) | rappel 51,6 %, précision 100 % | rappel 50,0 %, précision 100 % |
+| mistral 7B seul (`--sans-regles`) | rappel 68,4 %, précision 86,4 % | rappel 55,0 %, précision 97,6 % |
 | Règles + mistral 7B | rappel 97,9 %, précision 91,1 % | rappel 93,3 à 96,7 %, précision 100 % |
+
+**Aucune des deux parties ne suffit seule.** Les règles ne trouvent aucun
+nom ; le modèle seul ne masque aucun numéro de sécurité sociale et presque
+aucun téléphone ni courriel, et manque la plupart des dates (6 sur 16, puis
+1 sur 11). Il en propose parfois, mais étiquetés comme des lieux, et le
+filtre de plausibilité les écarte : ce filtre est conçu pour l'outil complet,
+où les règles couvrent ces données. La ligne « modèle seul » provient d'un
+seul passage.
 
 ### Historique du corpus de contrôle
 
@@ -208,6 +217,8 @@ Pour reproduire :
 
 ```sh
 pseudonymiser evaluer corpus/controle --details
+pseudonymiser evaluer corpus/controle --sans-llm      # règles seules
+pseudonymiser evaluer corpus/controle --sans-regles   # modèle seul
 ```
 
 ## Installation
@@ -303,12 +314,31 @@ tests/              tests unitaires (sans modèle)
 corpus/             documents fictifs annotés et guide d'annotation
 ```
 
-## Tests
+## Tests et qualité
 
 ```sh
 python -m pip install -e ".[dev]"
-python -m pytest
+python -m pytest --cov
 ```
+
+50 tests, sans GPU ni Ollama : un faux client remplace le modèle, et le
+contrat avec Ollama (schéma JSON, température, contenu de la requête) est
+vérifié sur une réponse simulée. La CI (Python 3.10 à 3.13) exécute aussi
+une analyse statique (pyflakes), une vérification des types (mypy) et exige
+au moins 85 % de couverture (88 % aujourd'hui).
+
+## Projets liés
+
+Quatre outils d'IA locale, construits et évalués de la même façon (corpus
+fictifs annotés, corpus de contrôle versé avant la mesure) :
+
+- [rag-local-souverain](https://github.com/LeoPeyreCosta/rag-local-souverain) :
+  interroger ses documents internes, avec une interface web accessible ;
+- [tri-demandes-local](https://github.com/LeoPeyreCosta/tri-demandes-local) :
+  orienter les demandes d'usagers d'une mairie et repérer les urgences ;
+- [compte-rendu-local](https://github.com/LeoPeyreCosta/compte-rendu-local) :
+  transcrire une réunion et en rédiger le compte rendu ;
+- pseudonymisation-locale (ce dépôt).
 
 ## Licence
 
