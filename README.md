@@ -26,7 +26,7 @@ mesure ce qu'il laisse passer.
 
 Extrait d'un document fictif du corpus, traité avec
 `pseudonymiser traiter corpus/developpement/1_lettre_liaison.txt`
-(mistral 7B, 5 s) :
+(mistral 7B, 3 s) :
 
 ```text
 Centre hospitalier des Trois Fontaines
@@ -92,7 +92,7 @@ raison pour laquelle une relecture reste nécessaire.
         │      adresses et compléments, identifiants (IPP, RPPS, matricule…),
         │      champs « Nom : » / « Prénom : »
         │
-        ├──► Modèle local (llm.py)                 Ollama, localhost:11434
+        ├──► Modèle local (llm.py)                 Ollama, 127.0.0.1:11434
         │      personnes, lieux, organisations
         │      sortie imposée par un schéma JSON, température 0
         │        │
@@ -129,7 +129,7 @@ Quelques choix :
 ## Garanties
 
 - **Aucun envoi hors du poste.** Le code ne contacte que le serveur Ollama
-  indiqué par `--url` (par défaut `http://localhost:11434`) : `/api/tags`
+  indiqué par `--url` (par défaut `http://127.0.0.1:11434`) : `/api/tags`
   pour vérifier qu'il répond, `/api/chat` pour l'analyse. Pas de clé d'API,
   pas de service tiers, pas de télémétrie. Si `--url` désigne une autre
   machine, les documents y transitent : à réserver à un serveur maîtrisé.
@@ -318,8 +318,13 @@ Mesures faites sur :
 - carte graphique NVIDIA RTX 3080 (10 Go), Windows 11, Python 3.13 ;
 - Ollama 0.40.12, `mistral` 7B quantifié (Q4_K_M) : 4,4 Go sur disque,
   environ 4,6 Go de mémoire graphique une fois chargé ;
-- environ 5 secondes par document d'une page (31 s pour les 6 documents du
-  corpus de développement).
+- environ 3 secondes par document d'une page (21 s pour les 6 documents du
+  corpus de développement, rappel et précision inchangés).
+
+Ces durées ont été mesurées après avoir remplacé `localhost` par
+`127.0.0.1` dans l'adresse d'Ollama : sous Windows, `localhost` essaie
+d'abord l'IPv6 (`::1`), où Ollama n'écoute pas, et chaque requête perdait
+environ 2 secondes (31 s au lieu de 21 pour le corpus de développement).
 
 Le modèle occupant environ 4,6 Go, une carte de 8 Go devrait suffire (non
 testé). Sans carte graphique, Ollama fonctionne sur le processeur, plus

@@ -27,10 +27,10 @@ def test_requete_envoyee_et_reponse_lue(monkeypatch):
         return Reponse('{"entites": [{"texte": "Lucie Bernard", "type": "PERSONNE"}]}')
 
     monkeypatch.setattr(llm.requests, "post", post)
-    mentions = ClientOllama(modele="mistral", url="http://localhost:11434").extraire("Mme Lucie Bernard.")
+    mentions = ClientOllama(modele="mistral", url="http://127.0.0.1:11434").extraire("Mme Lucie Bernard.")
     assert mentions == [{"texte": "Lucie Bernard", "type": "PERSONNE"}]
     url, corps = envois[0]
-    assert url == "http://localhost:11434/api/chat"
+    assert url == "http://127.0.0.1:11434/api/chat"
     assert corps["format"] == SCHEMA and corps["stream"] is False
     assert corps["options"] == {"temperature": 0}
     assert corps["messages"][1] == {"role": "user", "content": "Mme Lucie Bernard."}

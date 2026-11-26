@@ -84,7 +84,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     commun = argparse.ArgumentParser(add_help=False)
     commun.add_argument("--modele", default="mistral", help="modèle Ollama (défaut : mistral)")
-    commun.add_argument("--url", default="http://localhost:11434", help="adresse du serveur Ollama")
+    commun.add_argument("--url", default="http://127.0.0.1:11434", help="adresse du serveur Ollama")
     commun.add_argument("--sans-llm", action="store_true", help="règles seules, sans modèle")
     commun.add_argument("--details", action="store_true", help="afficher le détail")
     sous = parser.add_subparsers(dest="commande", required=True)

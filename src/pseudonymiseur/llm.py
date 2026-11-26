@@ -69,7 +69,10 @@ class ClientOllama:
     """Client minimal pour un serveur Ollama local."""
 
     modele: str = "mistral"
-    url: str = "http://localhost:11434"
+    #: 127.0.0.1 plutôt que localhost : sous Windows, localhost essaie d'abord
+    #: l'IPv6 (::1), où Ollama n'écoute pas, et chaque requête perd environ
+    #: 2 secondes avant de se rabattre sur l'IPv4.
+    url: str = "http://127.0.0.1:11434"
     delai: float = 300.0
 
     def disponible(self) -> bool:
