@@ -7,7 +7,10 @@ Deux modes, au sens du RGPD :
   données d'origine. Cette table est une donnée sensible : elle doit être
   conservée à part, sous accès restreint ;
 * **anonymisation** : étiquettes génériques (``[PERSONNE]``), aucune table.
-  Le texte produit ne permet plus de retrouver les personnes.
+  Attention : au sens du RGPD, un texte n'est anonyme que si plus personne
+  ne peut réidentifier les personnes, contexte compris (âge, maladie rare,
+  événement daté…). Ce mode supprime le lien technique, il ne garantit pas
+  à lui seul l'anonymat.
 """
 
 from __future__ import annotations
