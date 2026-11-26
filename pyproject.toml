@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pseudonymisation-locale"
+version = "0.1.0"
+description = "Pseudonymisation de documents français (RGPD) avec des règles vérifiables et un LLM 100 % local."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Léo Peyre-Costa" }]
+requires-python = ">=3.10"
+dependencies = ["requests>=2.30"]
+
+[project.optional-dependencies]
+pdf = ["pypdf>=4.0"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+pseudonymiser = "pseudonymiseur.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

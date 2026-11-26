@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+
+# Sorties : peuvent contenir des données personnelles ou des tables de correspondance
+sorties/
+*.table.json
+*.pseudonymise.txt
+
+# Vos documents réels : ne jamais les versionner
+documents/
