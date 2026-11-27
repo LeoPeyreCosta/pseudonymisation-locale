@@ -9,6 +9,23 @@ par des règles vérifiables ; les noms de personnes, de lieux et
 d'organisations par un modèle de langue qui tourne sur la machine, via
 [Ollama](https://ollama.com).
 
+**En bref**
+
+- **Mesuré** sur 14 documents fictifs annotés à la main (209 données
+  personnelles), dont 8 documents de contrôle versés avant d'être mesurés.
+  Règles et modèle (mistral 7B) ensemble masquent 82 à 85 % des données du
+  premier contrôle, avant les corrections qu'il a inspirées, et 96,3 %
+  (52 sur 54) du second, écrit ensuite et mesuré une seule fois ; les
+  règles seules, la moitié. Environ 3 secondes par page sur une RTX 3080.
+- **Lancer** : `pip install -e ".[pdf]"`, `ollama pull mistral`, puis
+  `pseudonymiser traiter courrier.txt` (texte pseudonymisé et table de
+  correspondance) ; `--sans-llm` fonctionne sans modèle ni carte graphique
+  ([Installation](#installation)).
+- **Limites** : corpus petits et fictifs, écrits par l'auteur ; le modèle
+  oublie des noms, pas toujours les mêmes ; l'âge, la profession ou une
+  maladie rare ne sont pas traités. Une relecture humaine reste
+  indispensable avant diffusion ([Limites](#limites)).
+
 ## Le problème
 
 Un hôpital, un service social ou une mairie a souvent besoin de sortir un
